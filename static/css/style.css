@@ -1,0 +1,238 @@
+/* Main Styles */
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #f1f8ff;
+    font-weight: bold;
+}
+
+/* Connection Status Indicator */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status-indicator.connected {
+    background-color: #28a745;
+}
+
+.status-indicator.disconnected {
+    background-color: #dc3545;
+}
+
+/* Data Display */
+.data-display {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.data-item {
+    display: flex;
+    align-items: center;
+}
+
+.data-label {
+    width: 100px;
+    font-weight: bold;
+}
+
+.data-value {
+    font-size: 1.2em;
+    margin-right: 5px;
+    font-weight: 500;
+}
+
+.data-unit {
+    width: 30px;
+    text-align: right;
+    color: #6c757d;
+}
+
+/* Log Container */
+.log-container {
+    height: 200px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    font-family: monospace;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    word-wrap: break-word;
+}
+
+.log-entry-system {
+    color: #0d6efd;
+}
+
+.log-entry-command {
+    color: #198754;
+}
+
+.log-entry-error {
+    color: #dc3545;
+}
+
+/* Charts */
+canvas {
+    width: 100% !important;
+    height: 250px !important;
+}
+
+/* Controls */
+input[type="range"] {
+    width: 85%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#mixerSpeedReadout {
+    display: inline-block;
+    width: 10%;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .data-label {
+        width: 80px;
+    }
+    
+    .log-container {
+        height: 150px;
+    }
+}
+
+/* Highlight card effect */
+@keyframes highlight {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+.highlight-card {
+    animation: highlight 1s ease-in-out;
+}
+
+/* Machine visualization */
+.machine-visualization {
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.machine-visualization svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Test results */
+.test-results {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Recipe management */
+.ingredient-item, .step-item {
+    background-color: #f8f9fa;
+}
+
+/* Command list for Batch Processing */
+#batchCommandsList {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Calibration */
+#calibResultDiv {
+    margin-top: 15px;
+}
+
+/* Animations for visualization */
+@keyframes drop {
+    0% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(50px); }
+}
+
+.drop-particle {
+    animation: drop 1s ease-in-out forwards;
+}
+
+/* Tooltip enhancements */
+.tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    margin: 0;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+    font-size: .875rem;
+    word-wrap: break-word;
+    opacity: 0;
+}
+
+.tooltip.show {
+    opacity: .9;
+}
+
+.tooltip .tooltip-inner {
+    max-width: 200px;
+    padding: .25rem .5rem;
+    color: #fff;
+    text-align: center;
+    background-color: #000;
+    border-radius: .25rem;
+}
+
+/* Language specific styles */
+html[lang="tr"] {
+    /* Any specific styles for Turkish language */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Fix for Turkish characters with dots (i, ı, İ, i) */
+html[lang="tr"] .tooltip,
+html[lang="tr"] .btn,
+html[lang="tr"] .alert,
+html[lang="tr"] .card-header {
+    text-transform: none;
+}

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teigwunderbar Machine Controller</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container-fluid" id="app">
+        <h1 class="my-3" data-i18n="app.title">Teigwunderbar Machine Controller</h1>
+        
+        <!-- Connection Panel (Always visible) -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 data-i18n="app.connection.title">Connection</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select id="portSelect" class="form-select">
+                                    <option value="" data-i18n="app.connection.select_port">Select COM Port</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="refreshBtn" class="btn btn-secondary" data-i18n="app.connection.refresh">Refresh</button>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="connectBtn" class="btn btn-primary" data-i18n="app.connection.connect">Connect</button>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="disconnectBtn" class="btn btn-danger" disabled data-i18n="app.connection.disconnect">Disconnect</button>
+                            </div>
+                            <div class="col-md-2">
+                                <span id="statusIndicator" class="status-indicator disconnected"></span>
+                                <span id="statusText" data-i18n="app.connection.disconnected">Disconnected</span>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-globe"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" id="languageSelector" aria-labelledby="languageDropdown">
+                                        <li><a class="dropdown-item" href="#" data-lang="en">English</a></li>
+                                        <li><a class="dropdown-item" href="#" data-lang="de">Deutsch</a></li>
+                                        <li><a class="dropdown-item" href="#" data-lang="tr">Türkçe</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="control-tab" data-bs-toggle="tab" data-bs-target="#control" type="button" role="tab" aria-controls="control" aria-selected="true">
+                    <i class="bi bi-sliders"></i> <span data-i18n="app.tabs.control">Control</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="recipes-tab" data-bs-toggle="tab" data-bs-target="#recipes" type="button" role="tab" aria-controls="recipes" aria-selected="false">
+                    <i class="bi bi-journal-text"></i> <span data-i18n="app.tabs.recipes">Recipes</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pid-tab" data-bs-toggle="tab" data-bs-target="#pid" type="button" role="tab" aria-controls="pid" aria-selected="false">
+                    <i class="bi bi-graph-up"></i> <span data-i18n="app.tabs.pid">PID Tuning</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="batch-tab" data-bs-toggle="tab" data-bs-target="#batch" type="button" role="tab" aria-controls="batch" aria-selected="false">
+                    <i class="bi bi-list-check"></i> <span data-i18n="app.tabs.batch">Batch</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="logging-tab" data-bs-toggle="tab" data-bs-target="#logging" type="button" role="tab" aria-controls="logging" aria-selected="false">
+                    <i class="bi bi-file-earmark-bar-graph"></i> <span data-i18n="app.tabs.logging">Data Logging</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="calibration-tab" data-bs-toggle="tab" data-bs-target="#calibration" type="button" role="tab" aria-controls="calibration" aria-selected="false">
+                    <i class="bi bi-gear-wide-connected"></i> <span data-i18n="app.tabs.calibration">Calibration</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="testing-tab" data-bs-toggle="tab" data-bs-target="#testing" type="button" role="tab" aria-controls="testing" aria-selected="false">
+                    <i class="bi bi-wrench"></i> <span data-i18n="app.tabs.testing">Testing</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="visualization-tab" data-bs-toggle="tab" data-bs-target="#visualization" type="button" role="tab" aria-controls="visualization" aria-selected="false">
+                    <i class="bi bi-diagram-3"></i> <span data-i18n="app.tabs.visualization">Visualization</span>
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Control Tab (Original Controls) -->
+            <div class="tab-pane fade show active" id="control" role="tabpanel" aria-labelledby="control-tab">
+                <!-- Data Display and Charts -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.readings.title">Current Readings</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="data-display">
+                                    <div class="data-item">
+                                        <span class="data-label" data-i18n="app.readings.weight">Weight:</span>
+                                        <span id="weightValue" class="data-value">0.0</span>
+                                        <span class="data-unit" data-i18n="units.weight.g">g</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label" data-i18n="app.readings.rel_weight">Rel. Weight:</span>
+                                        <span id="relWeightValue" class="data-value">0.0</span>
+                                        <span class="data-unit" data-i18n="units.weight.g">g</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label" data-i18n="app.readings.temperature">Temperature:</span>
+                                        <span id="tempValue" class="data-value">0.0</span>
+                                        <span class="data-unit" data-i18n="units.temperature.c">°C</span>
+                                    </div>
+                                    <div class="data-item">
+                                        <span class="data-label" data-i18n="app.readings.mixer_speed">Mixer Speed:</span>
+                                        <span id="mixerSpeedValue" class="data-value">0</span>
+                                        <span class="data-unit">/255</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.monitoring.title">Monitoring</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <canvas id="weightChart"></canvas>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <canvas id="tempChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Control Panels -->
+                <div class="row mb-4">
+                    <!-- Feeder Controls -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.feeder.title">Feeder Controls</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="feederSelect" class="form-label" data-i18n="app.feeder.select">Select Feeder</label>
+                                    <select id="feederSelect" class="form-select">
+                                        <option value="1">Feeder 1</option>
+                                        <option value="2">Feeder 2</option>
+                                        <option value="3">Feeder 3</option>
+                                        <option value="4">Feeder 4</option>
+                                        <option value="5">Feeder 5</option>
+                                        <option value="6">Feeder 6</option>
+                                        <option value="7">Feeder 7</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="feederAmount" class="form-label" data-i18n="app.feeder.amount">Amount (g)</label>
+                                    <input type="number" id="feederAmount" class="form-control" value="100">
+                                </div>
+                                <button id="startFeederBtn" class="btn btn-success" data-i18n="app.feeder.start">Start Feeder</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mixer Controls -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.mixer.title">Mixer Controls</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="mixerSpeedSlider" class="form-label" data-i18n="app.mixer.speed">Mixer Speed (0-255)</label>
+                                    <input type="range" class="form-range" id="mixerSpeedSlider" min="0" max="255" value="0">
+                                    <span id="mixerSpeedReadout">0</span>
+                                </div>
+                                <div class="mb-3">
+                                    <button id="startMixerBtn" class="btn btn-success" data-i18n="app.mixer.start">Start Mixer</button>
+                                    <button id="stopMixerBtn" class="btn btn-danger" data-i18n="app.mixer.stop">Stop Mixer</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pidTargetWeight" class="form-label" data-i18n="app.mixer.pid_target">PID Target Weight (g)</label>
+                                    <input type="number" id="pidTargetWeight" class="form-control" value="500">
+                                </div>
+                                <button id="startPIDBtn" class="btn btn-primary" data-i18n="app.mixer.start_pid">Start PID Control</button>
+                                <button id="stopPIDBtn" class="btn btn-warning" data-i18n="app.mixer.stop_pid">Stop PID</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Water Controls -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.water.title">Water Controls</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="waterAmount" class="form-label" data-i18n="app.water.amount">Water Amount (g)</label>
+                                    <input type="number" id="waterAmount" class="form-control" value="200">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="waterTemp" class="form-label" data-i18n="app.water.temperature">Water Temperature (°C)</label>
+                                    <input type="number" id="waterTemp" class="form-control" value="35">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="setTempBtn" class="btn btn-primary" data-i18n="app.water.set_temp">Set Temperature</button>
+                                    <button id="dispenseWaterBtn" class="btn btn-success" data-i18n="app.water.dispense">Dispense Water</button>
+                                    <button id="stopWaterBtn" class="btn btn-danger" data-i18n="app.water.stop">Stop Water</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Controls -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.scale.title">Scale Controls</h5>
+                            </div>
+                            <div class="card-body">
+                                <button id="tareBtn" class="btn btn-warning" data-i18n="app.scale.tare_absolute">Tare Scale (Absolute)</button>
+                                <button id="tareRelativeBtn" class="btn btn-warning" data-i18n="app.scale.tare_relative">Tare Scale (Relative)</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.motor.title">Motor Controls</h5>
+                            </div>
+                            <div class="card-body">
+                                <button id="enableDriversBtn" class="btn btn-primary" data-i18n="app.motor.enable">Enable Motor Drivers</button>
+                                <button id="disableDriversBtn" class="btn btn-secondary" data-i18n="app.motor.disable">Disable Motor Drivers</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipes Tab -->
+            <div class="tab-pane fade" id="recipes" role="tabpanel" aria-labelledby="recipes-tab">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.recipe.title">Recipe Management</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="recipeName" class="form-label" data-i18n="app.recipe.name">Recipe Name</label>
+                                    <input type="text" class="form-control" id="recipeName">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" data-i18n="app.recipe.ingredients">Ingredients</label>
+                                    <div id="ingredientsList">
+                                        <!-- Ingredients will be added here dynamically -->
+                                    </div>
+                                    <button id="addIngredientBtn" class="btn btn-sm btn-outline-primary mt-2" data-i18n="app.recipe.add_ingredient">Add Ingredient</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" data-i18n="app.recipe.steps">Steps</label>
+                                    <div id="stepsList">
+                                        <!-- Steps will be added here dynamically -->
+                                    </div>
+                                    <button id="addStepBtn" class="btn btn-sm btn-outline-primary mt-2" data-i18n="app.recipe.add_step">Add Step</button>
+                                </div>
+                                <div class="mb-3">
+                                    <button id="saveRecipeBtn" class="btn btn-primary" data-i18n="app.recipe.save">Save Recipe</button>
+                                    <button id="clearRecipeBtn" class="btn btn-outline-secondary" data-i18n="app.batch.clear">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h5 data-i18n="app.recipe.title">Saved Recipes</h5>
+                                <button id="refreshRecipesBtn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Ingredients</th>
+                                                <th>Steps</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recipesTable">
+                                            <!-- Recipes will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- PID Tuning Tab -->
+            <div class="tab-pane fade" id="pid" role="tabpanel" aria-labelledby="pid-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.pid.title">PID Tuning</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="pidPValue" class="form-label" data-i18n="app.pid.kp">Proportional (P)</label>
+                                    <input type="number" class="form-control" id="pidPValue" value="10" step="0.1">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pidIValue" class="form-label" data-i18n="app.pid.ki">Integral (I)</label>
+                                    <input type="number" class="form-control" id="pidIValue" value="0.2" step="0.01">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pidDValue" class="form-label" data-i18n="app.pid.kd">Derivative (D)</label>
+                                    <input type="number" class="form-control" id="pidDValue" value="0.1" step="0.01">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="applyPIDBtn" class="btn btn-primary" data-i18n="app.pid.apply">Apply Settings</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="pidProfileName" class="form-label">Profile Name</label>
+                                    <input type="text" class="form-control" id="pidProfileName">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="savePIDProfileBtn" class="btn btn-success" data-i18n="app.pid.save">Save Profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h5>PID Profiles</h5>
+                                <button id="refreshPIDProfilesBtn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>P</th>
+                                                <th>I</th>
+                                                <th>D</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pidProfilesTable">
+                                            <!-- PID profiles will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5>PID Response Visualization</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pidResponseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Batch Tab -->
+            <div class="tab-pane fade" id="batch" role="tabpanel" aria-labelledby="batch-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.batch.title">Batch Processing</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Commands</label>
+                                    <div id="batchCommandsList" class="mb-2">
+                                        <!-- Commands will be added here dynamically -->
+                                    </div>
+                                    <button id="addBatchCommandBtn" class="btn btn-outline-primary" data-i18n="app.batch.add_command">Add Command</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="batchDelay" class="form-label" data-i18n="app.batch.delay">Delay (seconds)</label>
+                                    <input type="number" id="batchDelay" class="form-control" value="2" min="0" max="30">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="executeBatchBtn" class="btn btn-primary" data-i18n="app.batch.execute">Execute Batch</button>
+                                    <button id="clearBatchBtn" class="btn btn-secondary" data-i18n="app.batch.clear">Clear Commands</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Logging Tab -->
+            <div class="tab-pane fade" id="logging" role="tabpanel" aria-labelledby="logging-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.logging.title">Data Logging</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button id="startLoggingBtn" class="btn btn-success" data-i18n="app.logging.start">Start Logging</button>
+                                    <button id="stopLoggingBtn" class="btn btn-danger" disabled data-i18n="app.logging.stop">Stop Logging</button>
+                                </div>
+                                <div class="alert alert-info">
+                                    <small>Data logging records weight, temperature, and mixer speed at regular intervals. This data can be exported for analysis.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h5 data-i18n="app.logging.sessions">Sessions</h5>
+                                <button id="refreshSessionsBtn" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Session ID</th>
+                                                <th>Date</th>
+                                                <th>Size</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sessionsTable">
+                                            <!-- Sessions will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calibration Tab -->
+            <div class="tab-pane fade" id="calibration" role="tabpanel" aria-labelledby="calibration-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.calibration.load_cell">Load Cell Calibration</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="knownWeight" class="form-label" data-i18n="app.calibration.known_weight">Known Weight (g)</label>
+                                    <input type="number" id="knownWeight" class="form-control" value="500">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="startCalibrationBtn" class="btn btn-primary" data-i18n="app.calibration.start">Start Calibration</button>
+                                    <button id="saveCalibrationBtn" class="btn btn-success" data-i18n="app.calibration.save">Save Calibration</button>
+                                </div>
+                                <div class="alert alert-info">
+                                    <ol>
+                                        <li data-i18n="app.calibration.step1">Make sure the scale is empty</li>
+                                        <li data-i18n="app.calibration.step2">Click "Start Calibration"</li>
+                                        <li data-i18n="app.calibration.step3">Place the known weight on the scale when prompted</li>
+                                        <li data-i18n="app.calibration.step4">Wait for readings to stabilize</li>
+                                        <li data-i18n="app.calibration.step5">Click "Save Calibration"</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.calibration.temperature">Temperature Calibration</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="tempOffset" class="form-label">Temperature Offset (°C)</label>
+                                    <input type="number" id="tempOffset" class="form-control" value="0" step="0.1">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="applyTempCalibBtn" class="btn btn-primary">Apply Offset</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h5 data-i18n="app.calibration.motor">Motor Speed Calibration</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="motorCalibration" class="form-label">Speed Calibration Factor</label>
+                                    <input type="number" id="motorCalibration" class="form-control" value="1.0" step="0.05" min="0.5" max="2.0">
+                                </div>
+                                <div class="mb-3">
+                                    <button id="applyMotorCalibBtn" class="btn btn-primary">Apply Calibration</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testing Tab -->
+            <div class="tab-pane fade" id="testing" role="tabpanel" aria-labelledby="testing-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.testing.title">System Testing</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <button id="feederTestBtn" class="btn btn-outline-primary m-1" data-i18n="app.testing.feeders">Test Feeders</button>
+                                    <button id="mixerTestBtn" class="btn btn-outline-primary m-1" data-i18n="app.testing.mixer">Test Mixer</button>
+                                    <button id="waterTestBtn" class="btn btn-outline-primary m-1" data-i18n="app.testing.water">Test Water System</button>
+                                    <button id="scaleTestBtn" class="btn btn-outline-primary m-1" data-i18n="app.testing.scale">Test Scale</button>
+                                </div>
+                                <div class="alert alert-info">
+                                    <p>Test procedures will automatically run predefined sequences to verify component operation.</p>
+                                    <ul>
+                                        <li><strong>Feeders Test:</strong> Activates each feeder in sequence for a small amount</li>
+                                        <li><strong>Mixer Test:</strong> Runs the mixer at 50% speed then stops</li>
+                                        <li><strong>Water Test:</strong> Tests water valve and temperature controls</li>
+                                        <li><strong>Scale Test:</strong> Verifies scale response by taring</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.testing.results">Test Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="testResults" class="test-results">
+                                    <!-- Test results will be displayed here -->
+                                    <div class="alert alert-secondary" data-i18n="app.testing.no_tests">No tests have been run yet.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visualization Tab -->
+            <div class="tab-pane fade" id="visualization" role="tabpanel" aria-labelledby="visualization-tab">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 data-i18n="app.visualization.title">Machine Visualization</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="machineVisContainer" class="machine-visualization">
+                                    <!-- SVG will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other tabs will be added here in separate edits -->
+            
+        </div>
+        
+        <!-- Log Panel (Always visible at bottom) -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <h5 data-i18n="app.log.title">System Log</h5>
+                        <button id="clearLogBtn" class="btn btn-sm btn-outline-secondary" data-i18n="app.log.clear">Clear Log</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="logContainer" class="log-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Templates -->
+    <div class="modal fade" id="ingredientModal" tabindex="-1" aria-labelledby="ingredientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ingredientModalLabel" data-i18n="app.recipe.add_ingredient">Add Ingredient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="ingredientFeeder" class="form-label" data-i18n="app.feeder.select">Feeder</label>
+                        <select class="form-select" id="ingredientFeeder">
+                            <option value="1">Feeder 1</option>
+                            <option value="2">Feeder 2</option>
+                            <option value="3">Feeder 3</option>
+                            <option value="4">Feeder 4</option>
+                            <option value="5">Feeder 5</option>
+                            <option value="6">Feeder 6</option>
+                            <option value="7">Feeder 7</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ingredientName" class="form-label" data-i18n="app.recipe.ingredient_name">Ingredient Name</label>
+                        <input type="text" class="form-control" id="ingredientName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ingredientAmount" class="form-label" data-i18n="app.feeder.amount">Amount (g)</label>
+                        <input type="number" class="form-control" id="ingredientAmount" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="app.modal.cancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveIngredientBtn" data-i18n="app.modal.add">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/recipes.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/pid.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/batch.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/calibration.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/testing.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/visualization.js') }}"></script>
+</body>
+</html> 

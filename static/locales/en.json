@@ -1,0 +1,181 @@
+{
+  "language_name": "English",
+  "app": {
+    "title": "Teigwunderbar Machine Controller",
+    "tabs": {
+      "control": "Control",
+      "recipes": "Recipes",
+      "pid": "PID Tuning",
+      "batch": "Batch",
+      "logging": "Data Logging",
+      "calibration": "Calibration",
+      "testing": "Testing",
+      "visualization": "Visualization"
+    },
+    "connection": {
+      "title": "Connection",
+      "select_port": "Select COM Port",
+      "refresh": "Refresh",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "connected": "Connected",
+      "disconnected": "Disconnected"
+    },
+    "readings": {
+      "title": "Current Readings",
+      "weight": "Weight",
+      "rel_weight": "Rel. Weight",
+      "temperature": "Temperature",
+      "mixer_speed": "Mixer Speed"
+    },
+    "monitoring": {
+      "title": "Monitoring",
+      "weight_chart": "Weight (g)",
+      "temp_chart": "Temperature (°C)"
+    },
+    "feeder": {
+      "title": "Feeder Controls",
+      "select": "Select Feeder",
+      "amount": "Amount (g)",
+      "start": "Start Feeder"
+    },
+    "mixer": {
+      "title": "Mixer Controls",
+      "speed": "Mixer Speed (0-255)",
+      "start": "Start Mixer",
+      "stop": "Stop Mixer",
+      "pid_target": "PID Target Weight (g)",
+      "start_pid": "Start PID Control",
+      "stop_pid": "Stop PID"
+    },
+    "water": {
+      "title": "Water Controls",
+      "amount": "Water Amount (g)",
+      "temperature": "Water Temperature (°C)",
+      "set_temp": "Set Temperature",
+      "dispense": "Dispense Water",
+      "stop": "Stop Water"
+    },
+    "scale": {
+      "title": "Scale Controls",
+      "tare_absolute": "Tare Scale (Absolute)",
+      "tare_relative": "Tare Scale (Relative)"
+    },
+    "motor": {
+      "title": "Motor Controls",
+      "enable": "Enable Motor Drivers",
+      "disable": "Disable Motor Drivers"
+    },
+    "log": {
+      "title": "System Log",
+      "clear": "Clear Log"
+    },
+    "recipe": {
+      "title": "Recipe Management",
+      "name": "Recipe Name",
+      "create": "Create Recipe",
+      "save": "Save Recipe",
+      "load": "Load Recipe",
+      "delete": "Delete Recipe",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "add_ingredient": "Add Ingredient",
+      "add_step": "Add Step",
+      "ingredient_name": "Ingredient Name"
+    },
+    "pid": {
+      "title": "PID Tuning",
+      "kp": "Proportional (P)",
+      "ki": "Integral (I)",
+      "kd": "Derivative (D)",
+      "apply": "Apply Settings",
+      "save": "Save Profile",
+      "load": "Load Profile" 
+    },
+    "logging": {
+      "title": "Data Logging",
+      "start": "Start Logging",
+      "stop": "Stop Logging",
+      "export": "Export Data",
+      "sessions": "Sessions",
+      "download": "Download"
+    },
+    "calibration": {
+      "title": "Calibration",
+      "load_cell": "Load Cell",
+      "temperature": "Temperature",
+      "motor": "Motor Speed",
+      "save": "Save Calibration",
+      "known_weight": "Known Weight",
+      "start": "Start Calibration",
+      "step1": "Make sure the scale is empty",
+      "step2": "Click \"Start Calibration\"",
+      "step3": "Place the known weight on the scale when prompted",
+      "step4": "Wait for readings to stabilize",
+      "step5": "Click \"Save Calibration\""
+    },
+    "batch": {
+      "title": "Batch Processing",
+      "add_command": "Add Command",
+      "delay": "Delay (seconds)",
+      "execute": "Execute Batch",
+      "clear": "Clear Commands"
+    },
+    "testing": {
+      "title": "System Testing",
+      "feeders": "Test Feeders",
+      "mixer": "Test Mixer",
+      "water": "Test Water System",
+      "scale": "Test Scale",
+      "run": "Run Test",
+      "results": "Test Results",
+      "no_tests": "No tests have been run yet."
+    },
+    "visualization": {
+      "title": "Machine Visualization",
+      "feeders": "Feeders",
+      "mixer": "Mixer",
+      "water": "Water",
+      "scale": "Scale"
+    },
+    "settings": {
+      "title": "Settings",
+      "language": "Language",
+      "units": "Units",
+      "theme": "Theme",
+      "save": "Save Settings"
+    },
+    "modal": {
+      "cancel": "Cancel",
+      "add": "Add"
+    }
+  },
+  "messages": {
+    "error": {
+      "connection": "Connection error",
+      "command": "Command error",
+      "not_connected": "Not connected to device",
+      "recipe_save": "Failed to save recipe",
+      "recipe_load": "Failed to load recipe"
+    },
+    "success": {
+      "connected": "Successfully connected",
+      "disconnected": "Successfully disconnected",
+      "command_sent": "Command sent",
+      "recipe_saved": "Recipe saved successfully",
+      "recipe_loaded": "Recipe loaded successfully"
+    }
+  },
+  "units": {
+    "weight": {
+      "g": "g",
+      "kg": "kg",
+      "oz": "oz",
+      "lb": "lb"
+    },
+    "temperature": {
+      "c": "°C",
+      "f": "°F"
+    }
+  }
+} 

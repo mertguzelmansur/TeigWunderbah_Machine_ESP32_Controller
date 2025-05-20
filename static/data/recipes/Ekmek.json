@@ -1,0 +1,17 @@
+{
+  "filename": "Ekmek.json",
+  "ingredients": [
+    {
+      "amount": 100,
+      "feeder": "1",
+      "name": "Un"
+    },
+    {
+      "amount": 10,
+      "feeder": "2",
+      "name": "Tuz"
+    }
+  ],
+  "name": "Ekmek",
+  "steps": []
+}

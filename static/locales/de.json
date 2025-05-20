@@ -1,0 +1,168 @@
+{
+  "language_name": "Deutsch",
+  "app": {
+    "title": "Teigwunderbar Maschinen-Controller",
+    "tabs": {
+      "control": "Steuerung",
+      "recipes": "Rezepte",
+      "pid": "PID-Einstellung",
+      "batch": "Stapelverarbeitung",
+      "logging": "Datenprotokollierung",
+      "calibration": "Kalibrierung",
+      "testing": "Testen",
+      "visualization": "Visualisierung"
+    },
+    "connection": {
+      "title": "Verbindung",
+      "select_port": "COM-Port auswählen",
+      "refresh": "Aktualisieren",
+      "connect": "Verbinden",
+      "disconnect": "Trennen",
+      "connected": "Verbunden",
+      "disconnected": "Getrennt"
+    },
+    "readings": {
+      "title": "Aktuelle Messwerte",
+      "weight": "Gewicht",
+      "rel_weight": "Rel. Gewicht",
+      "temperature": "Temperatur",
+      "mixer_speed": "Mixer-Geschwindigkeit"
+    },
+    "monitoring": {
+      "title": "Überwachung",
+      "weight_chart": "Gewicht (g)",
+      "temp_chart": "Temperatur (°C)"
+    },
+    "feeder": {
+      "title": "Zuführungssteuerung",
+      "select": "Zuführung auswählen",
+      "amount": "Menge (g)",
+      "start": "Zuführung starten"
+    },
+    "mixer": {
+      "title": "Mixer-Steuerung",
+      "speed": "Mixer-Geschwindigkeit (0-255)",
+      "start": "Mixer starten",
+      "stop": "Mixer stoppen",
+      "pid_target": "PID-Zielgewicht (g)",
+      "start_pid": "PID-Steuerung starten",
+      "stop_pid": "PID-Steuerung stoppen"
+    },
+    "water": {
+      "title": "Wassersteuerung",
+      "amount": "Wassermenge (g)",
+      "temperature": "Wassertemperatur (°C)",
+      "set_temp": "Temperatur einstellen",
+      "dispense": "Wasser ausgeben",
+      "stop": "Wasser stoppen"
+    },
+    "scale": {
+      "title": "Waage-Steuerung",
+      "tare_absolute": "Waage tarieren (Absolut)",
+      "tare_relative": "Waage tarieren (Relativ)"
+    },
+    "motor": {
+      "title": "Motor-Steuerung",
+      "enable": "Motortreiber aktivieren",
+      "disable": "Motortreiber deaktivieren"
+    },
+    "log": {
+      "title": "Systemprotokoll",
+      "clear": "Protokoll löschen"
+    },
+    "recipe": {
+      "title": "Rezeptverwaltung",
+      "name": "Rezeptname",
+      "create": "Rezept erstellen",
+      "save": "Rezept speichern",
+      "load": "Rezept laden",
+      "delete": "Rezept löschen",
+      "ingredients": "Zutaten",
+      "steps": "Schritte",
+      "add_ingredient": "Zutat hinzufügen",
+      "add_step": "Schritt hinzufügen"
+    },
+    "pid": {
+      "title": "PID-Einstellung",
+      "kp": "Proportional (P)",
+      "ki": "Integral (I)",
+      "kd": "Differenzial (D)",
+      "apply": "Einstellungen anwenden",
+      "save": "Profil speichern",
+      "load": "Profil laden" 
+    },
+    "logging": {
+      "title": "Datenprotokollierung",
+      "start": "Protokollierung starten",
+      "stop": "Protokollierung stoppen",
+      "export": "Daten exportieren",
+      "sessions": "Sitzungen",
+      "download": "Herunterladen"
+    },
+    "calibration": {
+      "title": "Kalibrierung",
+      "load_cell": "Wägezelle",
+      "temperature": "Temperatur",
+      "motor": "Motorgeschwindigkeit",
+      "save": "Kalibrierung speichern",
+      "known_weight": "Bekanntes Gewicht"
+    },
+    "batch": {
+      "title": "Stapelverarbeitung",
+      "add_command": "Befehl hinzufügen",
+      "delay": "Verzögerung (Sekunden)",
+      "execute": "Stapel ausführen",
+      "clear": "Befehle löschen"
+    },
+    "testing": {
+      "title": "Systemtest",
+      "feeders": "Zuführungen testen",
+      "mixer": "Mixer testen",
+      "water": "Wassersystem testen",
+      "scale": "Waage testen",
+      "run": "Test ausführen"
+    },
+    "visualization": {
+      "title": "Maschinenvisualisierung",
+      "feeders": "Zuführungen",
+      "mixer": "Mixer",
+      "water": "Wasser",
+      "scale": "Waage"
+    },
+    "settings": {
+      "title": "Einstellungen",
+      "language": "Sprache",
+      "units": "Einheiten",
+      "theme": "Design",
+      "save": "Einstellungen speichern"
+    }
+  },
+  "messages": {
+    "error": {
+      "connection": "Verbindungsfehler",
+      "command": "Befehlsfehler",
+      "not_connected": "Nicht mit Gerät verbunden",
+      "recipe_save": "Fehler beim Speichern des Rezepts",
+      "recipe_load": "Fehler beim Laden des Rezepts"
+    },
+    "success": {
+      "connected": "Erfolgreich verbunden",
+      "disconnected": "Erfolgreich getrennt",
+      "command_sent": "Befehl gesendet",
+      "recipe_saved": "Rezept erfolgreich gespeichert",
+      "recipe_loaded": "Rezept erfolgreich geladen"
+    }
+  },
+  "units": {
+    "weight": {
+      "g": "g",
+      "kg": "kg",
+      "oz": "oz",
+      "lb": "lb"
+    },
+    "temperature": {
+      "c": "°C",
+      "f": "°F"
+    }
+  }
+} 

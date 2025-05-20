@@ -1,0 +1,181 @@
+{
+  "language_name": "Türkçe",
+  "app": {
+    "title": "Teigwunderbar Makine Kontrolörü",
+    "tabs": {
+      "control": "Kontrol",
+      "recipes": "Tarifler",
+      "pid": "PID Ayarı",
+      "batch": "Toplu İşlem",
+      "logging": "Veri Kaydetme",
+      "calibration": "Kalibrasyon",
+      "testing": "Test",
+      "visualization": "Görselleştirme"
+    },
+    "connection": {
+      "title": "Bağlantı",
+      "select_port": "COM Port Seçin",
+      "refresh": "Yenile",
+      "connect": "Bağlan",
+      "disconnect": "Bağlantıyı Kes",
+      "connected": "Bağlı",
+      "disconnected": "Bağlantı Kesildi"
+    },
+    "readings": {
+      "title": "Güncel Değerler",
+      "weight": "Ağırlık",
+      "rel_weight": "Bağıl Ağırlık",
+      "temperature": "Sıcaklık",
+      "mixer_speed": "Karıştırıcı Hızı"
+    },
+    "monitoring": {
+      "title": "İzleme",
+      "weight_chart": "Ağırlık (g)",
+      "temp_chart": "Sıcaklık (°C)"
+    },
+    "feeder": {
+      "title": "Besleyici Kontrolü",
+      "select": "Besleyici Seç",
+      "amount": "Miktar (g)",
+      "start": "Besleyiciyi Başlat"
+    },
+    "mixer": {
+      "title": "Karıştırıcı Kontrolü",
+      "speed": "Karıştırıcı Hızı (0-255)",
+      "start": "Karıştırıcıyı Başlat",
+      "stop": "Karıştırıcıyı Durdur",
+      "pid_target": "PID Hedef Ağırlık (g)",
+      "start_pid": "PID Kontrolünü Başlat",
+      "stop_pid": "PID'i Durdur"
+    },
+    "water": {
+      "title": "Su Kontrolü",
+      "amount": "Su Miktarı (g)",
+      "temperature": "Su Sıcaklığı (°C)",
+      "set_temp": "Sıcaklık Ayarla",
+      "dispense": "Su Ver",
+      "stop": "Suyu Durdur"
+    },
+    "scale": {
+      "title": "Tartı Kontrolü",
+      "tare_absolute": "Tartıyı Dara (Mutlak)",
+      "tare_relative": "Tartıyı Dara (Bağıl)"
+    },
+    "motor": {
+      "title": "Motor Kontrolü",
+      "enable": "Motor Sürücülerini Etkinleştir",
+      "disable": "Motor Sürücülerini Devre Dışı Bırak"
+    },
+    "log": {
+      "title": "Sistem Günlüğü",
+      "clear": "Günlüğü Temizle"
+    },
+    "recipe": {
+      "title": "Tarif Yönetimi",
+      "name": "Tarif Adı",
+      "create": "Tarif Oluştur",
+      "save": "Tarifi Kaydet",
+      "load": "Tarifi Yükle",
+      "delete": "Tarifi Sil",
+      "ingredients": "Malzemeler",
+      "steps": "Adımlar",
+      "add_ingredient": "Malzeme Ekle",
+      "add_step": "Adım Ekle",
+      "ingredient_name": "Malzeme Adı"
+    },
+    "pid": {
+      "title": "PID Ayarı",
+      "kp": "Oransal (P)",
+      "ki": "İntegral (I)",
+      "kd": "Türev (D)",
+      "apply": "Ayarları Uygula",
+      "save": "Profili Kaydet",
+      "load": "Profili Yükle" 
+    },
+    "logging": {
+      "title": "Veri Kaydetme",
+      "start": "Kaydetmeyi Başlat",
+      "stop": "Kaydetmeyi Durdur",
+      "export": "Verileri Dışa Aktar",
+      "sessions": "Oturumlar",
+      "download": "İndir"
+    },
+    "calibration": {
+      "title": "Kalibrasyon",
+      "load_cell": "Yük Hücresi",
+      "temperature": "Sıcaklık",
+      "motor": "Motor Hızı",
+      "save": "Kalibrasyonu Kaydet",
+      "known_weight": "Bilinen Ağırlık",
+      "start": "Kalibrasyonu Başlat",
+      "step1": "Tartının boş olduğundan emin olun",
+      "step2": "\"Kalibrasyonu Başlat\" düğmesine tıklayın",
+      "step3": "İstendiğinde bilinen ağırlığı tartının üzerine yerleştirin",
+      "step4": "Ölçümlerin dengelenmesini bekleyin",
+      "step5": "\"Kalibrasyonu Kaydet\" düğmesine tıklayın"
+    },
+    "batch": {
+      "title": "Toplu İşlem",
+      "add_command": "Komut Ekle",
+      "delay": "Gecikme (saniye)",
+      "execute": "Toplu İşlemi Yürüt",
+      "clear": "Komutları Temizle"
+    },
+    "testing": {
+      "title": "Sistem Testi",
+      "feeders": "Besleyicileri Test Et",
+      "mixer": "Karıştırıcıyı Test Et",
+      "water": "Su Sistemini Test Et",
+      "scale": "Tartıyı Test Et",
+      "run": "Testi Çalıştır",
+      "results": "Test Sonuçları",
+      "no_tests": "Henüz test çalıştırılmadı."
+    },
+    "visualization": {
+      "title": "Makine Görselleştirmesi",
+      "feeders": "Besleyiciler",
+      "mixer": "Karıştırıcı",
+      "water": "Su",
+      "scale": "Tartı"
+    },
+    "settings": {
+      "title": "Ayarlar",
+      "language": "Dil",
+      "units": "Birimler",
+      "theme": "Tema",
+      "save": "Ayarları Kaydet"
+    },
+    "modal": {
+      "cancel": "İptal",
+      "add": "Ekle"
+    }
+  },
+  "messages": {
+    "error": {
+      "connection": "Bağlantı hatası",
+      "command": "Komut hatası",
+      "not_connected": "Cihaza bağlı değil",
+      "recipe_save": "Tarif kaydedilemedi",
+      "recipe_load": "Tarif yüklenemedi"
+    },
+    "success": {
+      "connected": "Başarıyla bağlandı",
+      "disconnected": "Başarıyla bağlantı kesildi",
+      "command_sent": "Komut gönderildi",
+      "recipe_saved": "Tarif başarıyla kaydedildi",
+      "recipe_loaded": "Tarif başarıyla yüklendi"
+    }
+  },
+  "units": {
+    "weight": {
+      "g": "g",
+      "kg": "kg",
+      "oz": "oz",
+      "lb": "lb"
+    },
+    "temperature": {
+      "c": "°C",
+      "f": "°F"
+    }
+  }
+} 
