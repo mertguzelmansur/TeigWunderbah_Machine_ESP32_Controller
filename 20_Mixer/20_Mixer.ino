@@ -6,7 +6,7 @@
 #include <AccelStepper.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <PID_v1.h> // Include PID library
+#include <PID_v1_bc.h> // Changed from PID_v1.h to PID_v1_bc.h
 
 // 50kg Load cell configuration
 const int LOADCELL_DOUT_PIN = 16;
@@ -101,6 +101,15 @@ unsigned long lastTempCheck = 0;
 const unsigned long TEMP_CHECK_INTERVAL = 1000; // Check temperature every 1 second
 unsigned long lastPIDUpdate = 0;
 const unsigned long PID_UPDATE_INTERVAL = 50; // Update PID 20 times per second
+
+// Adding Python interface command constants for compatibility
+#define CMD_START "START"
+#define CMD_STOP "STOP"
+#define CMD_CALIBRATE "CALIBRATE"
+#define CMD_READ_WEIGHT "READ_WEIGHT"
+#define CMD_TARE "TARE"
+#define CMD_SET_SPEED "SET_SPEED"
+#define CMD_PING "PING"
 
 void setup() {
   Serial.begin(115200);
@@ -280,10 +289,116 @@ void processCommand(String command) {
   Serial.print("Processing command: ");
   Serial.println(command);
   
+  // Debug - print raw command received
+  Serial.print("Raw command received: '");
+  Serial.print(command);
+  Serial.println("'");
+  
+  // First check for Python interface commands (format: COMMAND;param1=value1;param2=value2)
+  if (command.indexOf(';') > 0) {
+    // Command has parameters in Python interface format
+    String cmd = command.substring(0, command.indexOf(';'));
+    
+    if (cmd == CMD_START) {
+      // START command format: START;feeder=1;weight=100;speed=2
+      int feederNum = getParamValue(command, "feeder").toInt();
+      float targetWeight = getParamValue(command, "weight").toFloat();
+      int speed = getParamValue(command, "speed").toInt();
+      
+      // Adjust motor speed based on speed parameter (1=slow, 2=normal, 3=fast)
+      int adjustedSpeed = 150; // default speed
+      if (speed == 1) adjustedSpeed = 100;      // slow
+      else if (speed == 2) adjustedSpeed = 150; // normal
+      else if (speed == 3) adjustedSpeed = 200; // fast
+      
+      // Process start command based on feeder number
+      if (feederNum >= 1 && feederNum <= 7) {
+        // Reset scale for this operation
+        weight_offset = absolute_weight;
+        relative_weight = 0;
+        
+        // Set target for the corresponding feeder
+        target_weights[feederNum-1] = targetWeight;
+        
+        // Enable motor and set speed
+        if (use_enable_pin) {
+          digitalWrite(ENABLE_PIN, LOW); // Enable motors
+        }
+        
+        switch (feederNum) {
+          case 1: feeder1.setSpeed(MAX_SPEED); feeder_active[0] = true; break;
+          case 2: feeder2.setSpeed(MAX_SPEED); feeder_active[1] = true; break;
+          case 3: feeder3.setSpeed(MAX_SPEED); feeder_active[2] = true; break;
+          case 4: feeder4.setSpeed(MAX_SPEED); feeder_active[3] = true; break;
+          case 5: feeder5.setSpeed(MAX_SPEED); feeder_active[4] = true; break;
+          case 6: feeder6.setSpeed(MAX_SPEED); feeder_active[5] = true; break;
+          case 7: feeder7.setSpeed(MAX_SPEED); feeder_active[6] = true; break;
+        }
+        
+        Serial.println("OK");
+      } else {
+        Serial.println("ERROR;Invalid feeder number");
+      }
+      return;
+    }
+    else if (cmd == CMD_STOP) {
+      // STOP command format: STOP;feeder=1
+      int feederNum = getParamValue(command, "feeder").toInt();
+      
+      if (feederNum >= 1 && feederNum <= 7) {
+        stopFeeder(feederNum);
+        Serial.println("OK");
+      } else {
+        Serial.println("ERROR;Invalid feeder number");
+      }
+      return;
+    }
+    else if (cmd == CMD_READ_WEIGHT) {
+      // Return weight in format: WEIGHT;value=123.4
+      Serial.print("WEIGHT;value=");
+      Serial.println(absolute_weight, 1);
+      return;
+    }
+    else if (cmd == CMD_TARE) {
+      // Tare the scale
+      scale.tare();
+      weight_offset = 0;
+      Serial.println("OK");
+      return;
+    }
+    else if (cmd == CMD_CALIBRATE) {
+      // CALIBRATE command format: CALIBRATE;weight=100
+      float refWeight = getParamValue(command, "weight").toFloat();
+      
+      // Here you would implement calibration logic
+      // This is simplified - normally you'd do a more complex calibration
+      scale.set_scale(refWeight);
+      Serial.println("OK");
+      return;
+    }
+    else if (cmd == CMD_SET_SPEED) {
+      // SET_SPEED command format: SET_SPEED;value=2
+      int speed = getParamValue(command, "value").toInt();
+      
+      // Speed affects the MAX_SPEED constant
+      // 1=slow, 2=normal, 3=fast
+      // You'd implement logic to adjust speeds here
+      Serial.println("OK");
+      return;
+    }
+    else if (cmd == CMD_PING) {
+      // Simple ping command to check connection
+      Serial.println("OK;PONG");
+      return;
+    }
+  }
+  
+  // If we reach here, process original command format
   // Feeder commands (feeder1+300, feeder2+500, etc.)
   if (command.startsWith("feeder1+")) {
     float target = command.substring(8).toFloat();
     startFeeder(1, target);
+    Serial.println("Starting feeder 1"); // Debug output
   }
   else if (command.startsWith("feeder2+")) {
     float target = command.substring(8).toFloat();
@@ -501,18 +616,22 @@ void startFeeder(int feederNum, float targetGrams) {
   
   // Enable motor if using enable pin
   if (use_enable_pin) {
-    digitalWrite(ENABLE_PIN, LOW); // Enable the motors
+    digitalWrite(ENABLE_PIN, LOW); // Enable the motors (LOW=enable, HIGH=disable for A4988)
+    Serial.print("Enable pin set to LOW. Current state: ");
+    Serial.println(digitalRead(ENABLE_PIN));
   }
   
   // Start at max speed 
   feeder->setSpeed(MAX_SPEED);
   feeder_active[feederNum-1] = true;
   
+  // Debug stepper status
   Serial.print("Starting from: ");
   Serial.print(relative_weight);
   Serial.print(" g, Target: ");
   Serial.print(target_weights[feederNum-1]);
-  Serial.println(" g");
+  Serial.print(" g, Speed: ");
+  Serial.println(MAX_SPEED);
 }
 
 void checkFeeders() {
@@ -743,5 +862,21 @@ void reportWeights() {
     Serial.println(relative_weight, 1);
     
     lastReportTime = millis();
+  }
+}
+
+// Helper function to extract parameter values from Python interface commands
+String getParamValue(String command, String paramName) {
+  int paramStart = command.indexOf(paramName + "=");
+  if (paramStart < 0) return "";
+  
+  paramStart += paramName.length() + 1; // Move past the "param="
+  int paramEnd = command.indexOf(";", paramStart);
+  
+  if (paramEnd < 0) {
+    // If no semicolon after, take the rest of the string
+    return command.substring(paramStart);
+  } else {
+    return command.substring(paramStart, paramEnd);
   }
 }
